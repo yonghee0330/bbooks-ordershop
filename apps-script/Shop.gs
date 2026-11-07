@@ -38,10 +38,10 @@ function reserved_() {   // 상품 id(서가|바코드또는제목) → 예약 �
   return m;
 }
 
-function inventory_() {
+function computeBase_() {
   const ss = SpreadsheetApp.getActive(), owners = {};
   ss.getSheetByName('점주').getDataRange().getValues().slice(1).forEach(r => { if (r[0]) owners[r[0]] = { name: r[3], status: r[7] }; });
-  const res = reserved_(), items = [];
+  const items = [];
   ss.getSheets().forEach(sh => {
     const t = sh.getName(); let sid;
     if (t === '비북스 직영') sid = 'B'; else { const m = t.match(/^([A-Z]-\d+)\s/); if (!m) return; sid = m[1]; }
@@ -59,11 +59,39 @@ function inventory_() {
     });
     Object.keys(g).forEach(k => {
       const d = g[k]; if (d.cat === '굿즈' || d.cat === '기타' || d.cat === '대관' || !(d.price > 0)) return;
-      const id = sid + '|' + (d.barcode || norm_(d.title)), stock = (d.cur || 0) - (res[id] || 0);
+      const stock = d.cur || 0;
       if (stock > 0) items.push({ shelf: sid, shelfName: sid === 'B' ? '비북스 직영' : o.name, cat: d.cat || '', title: d.title, barcode: d.barcode, price: d.price, listPrice: d.list, publisher: d.pub || '', stock: stock, added: d.added });
     });
   });
   return { generatedAt: new Date().toISOString(), items: items };
+}
+
+// ── 재고 스냅샷: 90여 개 탭을 요청마다 읽으면 느리므로, 시간 트리거가 미리 계산해 '_재고캐시' 탭에 저장한다
+const CACHE_TAB = '_재고캐시', CHUNK = 40000;
+function refreshSnapshot() {
+  const base = JSON.stringify(computeBase_()), ss = SpreadsheetApp.getActive();
+  let sh = ss.getSheetByName(CACHE_TAB) || ss.insertSheet(CACHE_TAB);
+  sh.hideSheet(); sh.clear();
+  const parts = []; for (let i = 0; i < base.length; i += CHUNK) parts.push([base.slice(i, i + CHUNK)]);
+  sh.getRange(1, 1, parts.length, 1).setNumberFormat('@').setValues(parts);
+}
+function readSnapshot_() {
+  const sh = SpreadsheetApp.getActive().getSheetByName(CACHE_TAB);
+  if (!sh || sh.getLastRow() < 1) return null;
+  return JSON.parse(sh.getRange(1, 1, sh.getLastRow(), 1).getValues().map(r => r[0]).join(''));
+}
+/** 처음 한 번만 실행: 10분마다 재고 스냅샷 갱신 + 지금 바로 1회 계산 */
+function setup() {
+  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'refreshSnapshot').forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger('refreshSnapshot').timeBased().everyMinutes(10).create();
+  refreshSnapshot();
+}
+function inventory_() {
+  const base = readSnapshot_();
+  if (!base) return { generatedAt: null, items: [], error: 'snapshot 없음 — Apps Script 에서 setup 을 한 번 실행하세요' };
+  const res = reserved_();
+  base.items = base.items.map(i => Object.assign({}, i, { stock: i.stock - (res[i.shelf + '|' + (i.barcode || norm_(i.title))] || 0) })).filter(i => i.stock > 0);
+  return base;
 }
 
 function order_(o) {

@@ -11,7 +11,7 @@ const PAGE = 48;
 
 async function load() {
   let inv, live = false;
-  if (C.inventoryUrl) { try { inv = await (await fetch(C.inventoryUrl + "?action=inventory")).json(); live = true } catch (e) { console.warn("라이브 재고 실패 → 정적 재고", e) } }
+  if (C.inventoryUrl) { try { const j = await (await fetch(C.inventoryUrl + "?action=inventory")).json(); if (j.items && j.items.length) { inv = j; live = true } } catch (e) { console.warn("라이브 재고 실패 → 정적 재고", e) } }
   if (!inv) inv = await (await fetch("data/inventory.json")).json();
   try { BOOKS = await (await fetch("data/books.json")).json() } catch { BOOKS = {} }
   BOOKS = { ...BOOKS, ...store.get("bb-kk", {}) };

@@ -1,7 +1,7 @@
 (() => {
 const C = window.BB, $ = s => document.querySelector(s);
 const won = n => n.toLocaleString("ko-KR") + "원";
-const norm = s => String(s || "").toLowerCase().replace(/[\s\W_]+/g, "");
+const norm = s => String(s || "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const store = { get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d } catch { return d } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} } };
 const split = t => { const m = String(t).trim().match(/^(.*?)\s*[\(（]([^()（）]*)[\)）]\s*$/); return m ? [m[1], m[2]] : [String(t).trim(), ""] };

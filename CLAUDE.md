@@ -10,3 +10,6 @@ shop.bbooks.co.kr 교체용(GitHub Pages, docs/CNAME). 입금: 카카오뱅크 7
 ## 주문 처리 흐름 (Shop.gs, '온라인주문' 탭 C열 드롭다운)
 접수 → 입금확인(사이트 재고에서 빠짐) → 준비·발송(손님 안내 메일 자동·1회) → 완료(서가 탭 판매 표 T~Y열에 자동 기록·1회, 비고=주문번호) / 취소(재고 복귀).
 접수 상태는 재고를 잡지 않음. 완료 후 취소·변경은 판매 행을 자동 삭제하지 않음(사용자가 서가 탭에서 직접). 코드 수정 후엔 시트 Apps Script 에 붙여넣고 setup 실행 + 배포 관리에서 새 버전.
+
+## 표지·소개 수동 입력 (카카오책에서 못 찾은 책)
+`python3 tools/edit_book.py missing`(목록) / `set "제목" --cover 이미지|URL --desc "소개" [--author --publisher --title]` / `show` / `unset`. 값은 site/data/overrides.json + site/covers/ (update.sh·kakao_link.py 를 다시 돌려도 유지, 수동 값이 우선). 이미지는 가로 600px JPEG 로 자동 축소. 사용자가 채팅에 이미지·소개글을 주면 이 도구로 넣고 deploy.sh → 확인 후 push.

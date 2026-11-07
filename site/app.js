@@ -15,9 +15,19 @@ async function load() {
   if (!inv) inv = await (await fetch("data/inventory.json")).json();
   try { BOOKS = await (await fetch("data/books.json")).json() } catch { BOOKS = {} }
   BOOKS = { ...BOOKS, ...store.get("bb-kk", {}) };
+  try {   // 수동 입력(표지·소개) — 카카오 값보다 우선
+    const ov = await (await fetch("data/overrides.json")).json();
+    for (const [k, o] of Object.entries(ov)) {
+      const b = { ...(BOOKS[k] || {}) };
+      if (o.cover) b.thumbnail = o.cover; if (o.desc) b.contents = o.desc; if (o.title) b.title = o.title;
+      if (o.author) b.authors = [o.author]; if (o.publisher) b.publisher = o.publisher;
+      if (!b.title) b.title = "";
+      BOOKS[k] = b;
+    }
+  } catch {}
   L = inv.items.map(i => {
     const [t0, hint] = split(i.title), b = BOOKS[norm(i.title)];
-    return { ...i, id: i.shelf + "|" + (i.barcode || norm(i.title)), name: b?.title || t0, author: b ? [...(b.authors || [])].join(", ") : hint,
+    return { ...i, id: i.shelf + "|" + (i.barcode || norm(i.title)), name: (b && b.title) || t0, author: b ? [...(b.authors || [])].join(", ") : hint,
       pub: b?.publisher || i.publisher, cover: b?.thumbnail || "", book: b || null };
   }).filter(i => i.stock > 0);
   $("#stats").innerHTML = `<div><b>${L.reduce((a, i) => a + i.stock, 0).toLocaleString()}</b>권 주문 가능</div><div><b>${new Set(L.map(i => i.shelf)).size}</b>개 서가</div><div><b>${L.filter(i => i.cat === "중고").length}</b>종 중고책</div>`;

@@ -115,7 +115,7 @@ function drawCart() {
 function shipFee(sub, method) { return method === "pickup" || !sub || sub >= C.shipping.freeOver ? 0 : C.shipping.fee }
 
 function detail(id) {
-  const i = byId(id), b = i.book, others = L.filter(x => x !== i && ((b && x.book?.isbn === b.isbn) || norm(x.name) === norm(i.name)));
+  const i = byId(id), b = i.book, others = L.filter(x => x !== i && ((b?.isbn && x.book?.isbn === b.isbn) || (norm(i.name).length >= 2 && norm(x.name) === norm(i.name))));
   $("#modal").innerHTML = `<div class="sheet"><button class="x" data-close>×</button><div class="det">${i.cover ? `<img src="${esc(i.cover)}" alt="" referrerpolicy="no-referrer">` : `<div class="cov"><div class="ph">${esc(i.name)}</div></div>`}
     <div><h2>${esc(i.name)}</h2><div class="au" style="white-space:normal">${esc(i.author)}${i.pub ? " · " + esc(i.pub) : ""}${b?.pubdate ? " · " + b.pubdate.slice(0, 4) : ""}</div>
     <div class="shelf">${i.shelf === "B" ? "비북스 직영" : esc(i.shelf + " " + i.shelfName)} · ${i.cat === "중고" ? "중고" : "새책"} · 재고 ${i.stock}권</div>

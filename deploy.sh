@@ -3,4 +3,5 @@
 set -e
 cd "$(dirname "$0")"
 rm -rf docs && mkdir docs && cp -R site/. docs/ && touch docs/.nojekyll; echo shop.bbooks.co.kr > docs/CNAME
+sed -i "" "s/__V__/$(date +%y%m%d%H%M%S)/g" docs/index.html
 git add -A && git commit -m "${1:-update}" -m "Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>" || echo "변경 없음"

@@ -6,6 +6,8 @@ update.sh / kakao_link.py 를 다시 돌려도 지워지지 않는다. (수동 �
   python3 tools/edit_book.py show "태훈이"                  # 현재 연결 상태
   python3 tools/edit_book.py set "스물두 살 태훈이" --cover ~/Desktop/a.jpg --desc "소개글…" [--author 저자] [--publisher 출판사] [--title 표시제목]
       (--cover 는 내 컴퓨터의 이미지 파일 또는 https 주소, --desc-file 소개글.txt 도 가능)
+  python3 tools/edit_book.py orphans                        # 시트 제목이 바뀌어 연결이 끊긴 수동 값
+  python3 tools/edit_book.py rename "새 제목"               # 끊긴 수동 값을 새 제목으로 옮김 (먼저 update.sh 로 재고 갱신)
   python3 tools/edit_book.py unset "태훈이"                 # 수동 값 삭제 (카카오 값으로 복귀)
 """
 import sys, re, json, shutil, argparse, subprocess, pathlib, hashlib
@@ -30,6 +32,8 @@ sub.add_parser("missing"); sh = sub.add_parser("show"); sh.add_argument("q")
 st = sub.add_parser("set"); st.add_argument("q"); st.add_argument("--cover"); st.add_argument("--desc"); st.add_argument("--desc-file")
 st.add_argument("--author"); st.add_argument("--publisher"); st.add_argument("--title")
 us = sub.add_parser("unset"); us.add_argument("q")
+rn = sub.add_parser("rename"); rn.add_argument("new", help="시트에서 고친 새 제목(재고에 있어야 함)"); rn.add_argument("--from", dest="old", help="예전 제목 일부(생략하면 연결이 끊긴 수동 값 중 하나를 자동 선택)")
+sub.add_parser("orphans")
 a = ap.parse_args()
 
 if a.cmd == "missing":
@@ -37,6 +41,16 @@ if a.cmd == "missing":
     print(len(miss), "종 (표지·소개 없음)")
     for t in miss: print(" ", t)
     sys.exit()
+if a.cmd == "orphans":
+    cur = {norm(t) for t in titles()}; o = [k for k in ov if k not in cur]
+    print(len(o), "건 연결 끊김(시트 제목이 바뀐 듯):"); [print(" ", k, "|", ov[k].get("title", "")) for k in o]; sys.exit()
+if a.cmd == "rename":
+    cur = {norm(t) for t in titles()}; orphan = [k for k in ov if k not in cur]
+    cand = [k for k in orphan if not a.old or norm(a.old) in k or norm(a.old) in norm(ov[k].get("title", ""))]
+    nm = find(a.new)
+    if len(nm) != 1: sys.exit("새 제목이 재고에서 정확히 1권 걸려야 해요: " + str(nm))
+    if len(cand) != 1: sys.exit("옮길 수동 값을 하나로 못 정했어요. orphans 로 확인 후 --from 을 적어 주세요: " + str(cand))
+    ov[norm(nm[0])] = ov.pop(cand[0]); OV.write_text(json.dumps(ov, ensure_ascii=False, indent=1)); print("옮김:", cand[0], "→", nm[0]); sys.exit()
 m = find(a.q)
 if not m: sys.exit(f"재고에서 '{a.q}' 를 못 찾았어요. missing 으로 목록을 확인해 주세요.")
 if len(m) > 1 and a.cmd != "show":

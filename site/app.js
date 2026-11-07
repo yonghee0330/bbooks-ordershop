@@ -124,6 +124,7 @@ function checkout() {
   <label>받는 방법</label><div class="seg"><label><input type="radio" name="m" value="pickup" checked>매장 픽업 (무료)</label><label><input type="radio" name="m" value="parcel">택배 (${won(C.shipping.fee)} · ${won(C.shipping.freeOver)} 이상 무료)</label></div>
   <div id="addrBox" hidden><label>주소</label><input id="addr" placeholder="택배 받을 주소"></div>
   <label>이름</label><input id="nm" autocomplete="name"><label>연락처</label><input id="ph" type="tel" inputmode="tel" placeholder="010-0000-0000" autocomplete="tel">
+  <label>이메일 (발송 안내를 보내 드려요)</label><input id="em" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com">
   <label>입금자명 (다르면 적어 주세요)</label><input id="dep"><label>요청사항</label><textarea id="memo" rows="2"></textarea>
   <div class="box" id="sumBox"></div>
   <div class="box">무통장입금 ${C.bank.account ? `<br><b>${esc(C.bank.name)} ${esc(C.bank.account)}</b> (${esc(C.bank.holder)})` : `<br>입금 계좌는 운영자가 입력하면 표시돼요.`}<br>주문 접수 후 24시간 안에 입금해 주세요.</div>
@@ -136,9 +137,11 @@ function checkout() {
 }
 async function submit() {
   const m = document.querySelector("[name=m]:checked").value, nm = $("#nm").value.trim(), ph = $("#ph").value.replace(/[^\d]/g, ""), addr = $("#addr").value.trim();
+  const em = $("#em").value.trim();
   if (!nm || ph.length < 9 || (m === "parcel" && !addr)) return alert("이름·연락처" + (m === "parcel" ? "·주소" : "") + "를 확인해 주세요.");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return alert("이메일을 확인해 주세요.");
   const t = totals(), f = shipFee(t.sub, m);
-  const order = { name: nm, phone: ph, method: m, address: addr, depositor: $("#dep").value.trim() || nm, memo: $("#memo").value.trim(), shipping: f, total: t.sub + f,
+  const order = { name: nm, phone: ph, email: em, method: m, address: addr, depositor: $("#dep").value.trim() || nm, memo: $("#memo").value.trim(), shipping: f, total: t.sub + f,
     lines: lines().map(({ i, q }) => ({ shelf: i.shelf, shelfName: i.shelfName, barcode: i.barcode, title: i.title, cat: i.cat, price: i.price, qty: q })) };
   const btn = $("#submit"); btn.disabled = true; btn.textContent = "접수 중…";
   let no, demo = !C.ordersUrl;

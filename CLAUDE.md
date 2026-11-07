@@ -6,3 +6,7 @@ shop.bbooks.co.kr 교체용(GitHub Pages, docs/CNAME). 입금: 카카오뱅크 7
 - 라이브: apps-script/Shop.gs 를 통합관리 시트에 붙여 웹앱 배포 → site/config.js 의 inventoryUrl/ordersUrl. 비우면 데모 모드(주문은 브라우저에만 저장).
 - 미리보기: `python3 -m http.server 8880 --directory site`. 배포: Vercel(api/kakao.js 프록시 포함), push·도메인 교체는 사용자 확인 후.
 - 사업자 정보·입금계좌는 사용자가 직접 줌(config.js bank). 찾아 넣지 말 것.
+
+## 주문 처리 흐름 (Shop.gs, '온라인주문' 탭 C열 드롭다운)
+접수 → 입금확인(사이트 재고에서 빠짐) → 준비·발송(손님 안내 메일 자동·1회) → 완료(서가 탭 판매 표 T~Y열에 자동 기록·1회, 비고=주문번호) / 취소(재고 복귀).
+접수 상태는 재고를 잡지 않음. 완료 후 취소·변경은 판매 행을 자동 삭제하지 않음(사용자가 서가 탭에서 직접). 코드 수정 후엔 시트 Apps Script 에 붙여넣고 setup 실행 + 배포 관리에서 새 버전.

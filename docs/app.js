@@ -7,16 +7,16 @@ const store = { get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? 
 const split = t => { const m = String(t).trim().match(/^(.*?)\s*[\(（]([^()（）]*)[\)）]\s*$/); return m ? [m[1], m[2]] : [String(t).trim(), ""] };
 
 let L = [], BOOKS = {}, cart = store.get("bb-cart", {}), st = { q: "", shelf: "", cat: "", sort: "new", shown: 48 };
-const PAGE = 48;
+const PAGE = 48, TS = Math.floor(Date.now() / 60000);   // 데이터 파일은 1분 단위로 캐시 무효화
 
 async function load() {
   let inv, live = false;
   if (C.inventoryUrl) { try { const j = await (await fetch(C.inventoryUrl + "?action=inventory")).json(); if (j.items && j.items.length) { inv = j; live = true } } catch (e) { console.warn("라이브 재고 실패 → 정적 재고", e) } }
-  if (!inv) inv = await (await fetch("data/inventory.json")).json();
-  try { BOOKS = await (await fetch("data/books.json")).json() } catch { BOOKS = {} }
+  if (!inv) inv = await (await fetch("data/inventory.json?t=" + TS)).json();
+  try { BOOKS = await (await fetch("data/books.json?t=" + TS)).json() } catch { BOOKS = {} }
   BOOKS = { ...BOOKS, ...store.get("bb-kk", {}) };
   try {   // 수동 입력(표지·소개) — 카카오 값보다 우선
-    const ov = await (await fetch("data/overrides.json")).json();
+    const ov = await (await fetch("data/overrides.json?t=" + TS)).json();
     for (const [k, o] of Object.entries(ov)) {
       const b = { ...(BOOKS[k] || {}) };
       if (o.cover) b.thumbnail = o.cover; if (o.desc) b.contents = o.desc; if (o.title) b.title = o.title;

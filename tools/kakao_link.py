@@ -54,10 +54,13 @@ for k, i in todo.items():
         if not hit:
             hit, _ = pick(search(title), title, hint, i.get("publisher"))
         if not hit and hint: hit, _ = pick(search(title + " " + hint), title, hint, i.get("publisher"))
+        if not hit:   # 괄호(시리즈·판형 등)를 전부 떼고 다시
+            plain = re.sub(r"[\(（][^()（）]*[\)）]", " ", i["title"]).strip()
+            if plain and plain != title: hit, _ = pick(search(plain), plain, hint, i.get("publisher"))
     except Exception as e:
         print("ERR", i["title"], e); time.sleep(2); continue
     if hit:
-        isbn = (hit.get("isbn") or "").split()[-1]
+        isbn = ((hit.get("isbn") or "").split() or [""])[-1]
         books[k] = {"isbn": isbn, "title": hit["title"], "authors": hit.get("authors", []), "translators": hit.get("translators", []),
                     "publisher": hit.get("publisher", ""), "thumbnail": hit.get("thumbnail", ""), "contents": hit.get("contents", ""),
                     "url": hit.get("url", ""), "listPrice": hit.get("price", 0), "pubdate": (hit.get("datetime") or "")[:10]}

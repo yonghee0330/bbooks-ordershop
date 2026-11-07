@@ -24,14 +24,19 @@ def search(q, size=5):
     with urllib.request.urlopen(req, timeout=15) as r: return json.load(r).get("documents", [])
 
 def pick(docs, title, hint, pub):
+    """제목·저자·출판사 기준. 제목이 거의 같으면(≥0.9) 통과, 아니면 저자 또는 출판사가 함께 맞아야 통과."""
     best, bs = None, 0
     for d in docs:
-        s = difflib.SequenceMatcher(None, norm(title), norm(d["title"])).ratio()
-        if norm(title) and norm(title) in norm(d["title"]): s = max(s, 0.85)
-        if hint and any(norm(hint) in norm(a) or norm(a) in norm(hint) for a in d.get("authors", []) if norm(a)): s += 0.12
-        if pub and norm(pub) and norm(pub) in norm(d.get("publisher", "")): s += 0.05
-        if s > bs: best, bs = d, s
-    return (best, bs) if bs >= 0.62 else (None, bs)
+        t = difflib.SequenceMatcher(None, norm(title), norm(d["title"])).ratio()
+        if len(norm(title)) >= 4 and norm(title) in norm(d["title"]) and len(norm(title)) >= 0.6 * len(norm(d["title"])): t = max(t, 0.85)
+        au = bool(hint) and any(norm(hint) in norm(a) or norm(a) in norm(hint) for a in d.get("authors", []) + d.get("translators", []) if norm(a))
+        pb = bool(pub) and len(norm(pub)) >= 2 and (norm(pub) in norm(d.get("publisher", "")) or norm(d.get("publisher", "")) in norm(pub))
+        if t >= 0.9: ok = True
+        elif t >= 0.62: ok = au or (pb and t >= 0.75) or (not hint and not pub and t >= 0.8)
+        else: ok = False
+        s = t + (0.12 if au else 0) + (0.08 if pb else 0)
+        if ok and s > bs: best, bs = d, s
+    return best, bs
 
 inv = json.loads((root / "data/inventory.json").read_text())["items"]
 outp = root / "data/books.json"

@@ -1,5 +1,5 @@
 # 비북스 도서 주문 (bbooks-ordershop)
-shop.bbooks.co.kr 교체용. 비북스 직영 + 0.1평 점주 서가의 재고를 한 곳에서 주문. 사용자는 한국어(비개발자). 톤은 비북스 메인(흰·옅은 그린 + 딜 그린 #4E6813), 헌책방 스타일 아님.
+shop.bbooks.co.kr 교체용(GitHub Pages, docs/CNAME). 입금: 카카오뱅크 7942-33-45474 경규환, 사업자 697-05-03470, 배송 3,000원/3만원 이상 무료. 비북스 직영 + 0.1평 점주 서가의 재고를 한 곳에서 주문. 사용자는 한국어(비개발자). 톤은 비북스 메인(흰·옅은 그린 + 딜 그린 #4E6813), 헌책방 스타일 아님.
 - 재고 원본: 구글시트 「비북스 0.1평 서가 통합관리」 1PwAYaYTmrRVT5jdgeZo3c1yJBwzIGdeUDgPDiLjNYeY (링크 공유 열림). 서가 탭 = `A-1 여백공작소` 식 + `비북스 직영`. 현재고(I열)가 시트 수식으로 계산됨.
 - 갱신: `curl -L -o live.xlsx ".../export?format=xlsx"` → `python3 tools/build_inventory.py live.xlsx` (굿즈·기타·대관 제외, 연락처 등 비공개 정보는 내보내지 않음) → `python3 tools/kakao_link.py` (KAKAO_REST_KEY 필요, .env) → site/data/ 로 복사.
 - 바코드는 대부분 내부코드(7777…)라 카카오책 연결은 제목(+괄호 속 저자) 검색. ISBN 이 있으면 isbn 검색.

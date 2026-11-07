@@ -76,7 +76,7 @@ function order_(o) {
     if (l.qty < 1 || l.qty > i.stock) return { ok: false, error: '재고가 부족해요: ' + l.title };
     l.price = i.price; l.cat = i.cat; sub += i.price * l.qty;   // 가격은 서버 기준
   }
-  const ship = o.method === 'parcel' && sub < 50000 ? 3000 : 0;
+  const ship = o.method === 'parcel' && sub < 30000 ? 3000 : 0;
   const no = 'BB-' + Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyMMdd') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
   const ss = SpreadsheetApp.getActive(); let sh = ss.getSheetByName(ORDER_TAB);
   if (!sh) { sh = ss.insertSheet(ORDER_TAB); sh.appendRow(HEAD); sh.setFrozenRows(1); }

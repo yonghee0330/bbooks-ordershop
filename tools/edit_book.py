@@ -30,7 +30,7 @@ def status(t):
 ap = argparse.ArgumentParser(); sub = ap.add_subparsers(dest="cmd", required=True)
 sub.add_parser("missing"); sh = sub.add_parser("show"); sh.add_argument("q")
 st = sub.add_parser("set"); st.add_argument("q"); st.add_argument("--cover"); st.add_argument("--desc"); st.add_argument("--desc-file")
-st.add_argument("--author"); st.add_argument("--publisher"); st.add_argument("--title")
+st.add_argument("--author"); st.add_argument("--publisher"); st.add_argument("--title"); st.add_argument("--keep-url", action="store_true", help="주소를 내려받지 않고 그대로 연결")
 us = sub.add_parser("unset"); us.add_argument("q")
 rn = sub.add_parser("rename"); rn.add_argument("new", help="시트에서 고친 새 제목(재고에 있어야 함)"); rn.add_argument("--from", dest="old", help="예전 제목 일부(생략하면 연결이 끊긴 수동 값 중 하나를 자동 선택)")
 sub.add_parser("orphans")
@@ -64,8 +64,15 @@ if a.cmd == "unset":
 rec = dict(ov.get(k, {}))
 if a.cover:
     src = a.cover
-    if re.match(r"https?://", src): rec["cover"] = src
+    if re.match(r"https?://", src) and a.keep_url: rec["cover"] = src
     else:
+        if re.match(r"https?://", src):   # 주소는 내려받아 우리 사이트에 저장(외부 서버 의존·핫링크 방지)
+            import tempfile, urllib.request
+            tmp = pathlib.Path(tempfile.mkdtemp()) / "dl"
+            req = urllib.request.Request(src, headers={"User-Agent": "Mozilla/5.0 bbooks-shop"})
+            try: tmp.write_bytes(urllib.request.urlopen(req, timeout=30).read())
+            except Exception as e: sys.exit("표지를 내려받지 못했어요: %s (%s)" % (src, e))
+            src = str(tmp)
         p = pathlib.Path(src).expanduser()
         if not p.exists(): sys.exit("이미지 파일이 없어요: " + src)
         name = "c-" + hashlib.md5(t.encode()).hexdigest()[:10] + ".jpg"

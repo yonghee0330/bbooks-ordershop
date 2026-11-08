@@ -24,6 +24,7 @@ for r in wb["점주"].iter_rows(min_row=2, values_only=True):
     if r[0]: owners[r[0]] = {"tab": r[1], "name": r[3], "status": r[7]}
 owners["B"] = {"tab": "비북스 직영", "name": "비북스 직영", "status": "운영"}
 
+HIDE = {"S-1", "S-2"}   # 비활성 서가
 items = []
 for ws in wb:
     t = ws.title
@@ -32,6 +33,7 @@ for ws in wb:
         m = re.match(r"^([A-Z]-\d+)\s", t)
         if not m: continue
         sid = m.group(1)
+    if sid in HIDE: continue
     o = owners.get(sid, {})
     if o.get("status") == "제외": continue
     rows = [tuple(r) + (None,) * 34 for r in ws.iter_rows(min_row=7, max_col=33, values_only=True)]

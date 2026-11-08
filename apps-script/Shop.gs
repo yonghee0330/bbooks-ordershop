@@ -20,6 +20,7 @@ const HEAD = ['주문번호', '접수시각', '상태', '이름', '연락처', '
               '주문내용(JSON)', '이메일', '완료시각', '판매기록', '안내메일'];
 const C = { NO: 0, AT: 1, ST: 2, NAME: 3, PHONE: 4, METHOD: 5, ADDR: 6, DEP: 7, MEMO: 8, SHIP: 9, TOTAL: 10, JSON: 11, MAIL: 12, DONE_AT: 13, SALE: 14, MAILED: 15 };
 const FREE_OVER = 30000, SHIP_FEE = 3000;
+const HIDE_SHELVES = ['S-1', 'S-2'];   // 비활성 서가: 사이트에 표시하지 않음 (점주 탭 상태를 '제외'로 바꿔도 같은 효과)
 
 // ───────── 웹앱 ─────────
 function doGet(e) {
@@ -67,6 +68,7 @@ function computeBase_() {
   ss.getSheets().forEach(sh => {
     const t = sh.getName(); let sid;
     if (t === '비북스 직영') sid = 'B'; else { const m = t.match(/^([A-Z]-\d+)\s/); if (!m) return; sid = m[1]; }
+    if (HIDE_SHELVES.indexOf(sid) >= 0) return;
     const o = owners[sid] || {}; if (o.status === '제외') return;
     const n = sh.getLastRow() - 6; if (n < 1) return;
     const rows = sh.getRange(7, 1, n, 18).getValues(), g = {};

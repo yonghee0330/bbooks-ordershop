@@ -7,6 +7,7 @@ const store = { get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? 
 const split = t => { const m = String(t).trim().match(/^(.*?)\s*[\(（]([^()（）]*)[\)）]\s*$/); return m ? [m[1], m[2]] : [String(t).trim(), ""] };
 
 let L = [], BOOKS = {}, cart = store.get("bb-cart", {}), st = { q: "", shelf: "", cat: "", sort: "new", shown: 48 };
+const NOCOVER = new URLSearchParams(location.search).has("nocover");   // 임시 작업용: 표지 없는 책만 보기
 const PAGE = 48, TS = Math.floor(Date.now() / 60000);   // 데이터 파일은 1분 단위로 캐시 무효화
 
 async function load() {
@@ -37,13 +38,16 @@ async function load() {
     .map(([k, v]) => `<option value="${esc(k)}">${k === "B" ? "비북스 직영" : esc(k + " · " + v.n)} (${v.c})</option>`).join("");
   const cats = ["", "새책", "중고"];
   $("#cats").innerHTML = cats.map(c => `<button class="chip" data-c="${c}">${c || "전체"}</button>`).join("");
+  if (NOCOVER) { st.sort = "title"; $("#sort").value = "title";
+    const n = L.filter(i => !i.cover).length;
+    $(".hero .sub").innerHTML = `<b style="color:#a4411f">작업용 보기</b> — 표지가 없는 책 ${n}권만 보여요. (일반 화면은 주소에서 ?nocover 를 빼세요)`; }
   render(); updateCart();
 }
 const catOf = i => i.cat === "중고" ? "중고" : "새책";
 
 function filtered() {
   const q = norm(st.q);
-  let r = L.filter(i => (!st.shelf || i.shelf === st.shelf) && (!st.cat || catOf(i) === st.cat) &&
+  let r = L.filter(i => (!NOCOVER || !i.cover) && (!st.shelf || i.shelf === st.shelf) && (!st.cat || catOf(i) === st.cat) &&
     (!q || norm([i.name, i.title, i.author, i.pub, i.shelfName, i.shelf].join(" ")).includes(q)));
   const by = { new: (a, b) => (b.added || "").localeCompare(a.added || ""), low: (a, b) => a.price - b.price, high: (a, b) => b.price - a.price, title: (a, b) => a.name.localeCompare(b.name, "ko") };
   return r.sort(by[st.sort]);
@@ -58,6 +62,7 @@ function render() {
     <div class="cov" data-open>${coverHtml(i)}<span class="tag ${i.cat === "중고" ? "used" : ""}">${catOf(i)}</span></div>
     <div class="info"><div class="ttl" data-open>${esc(i.name)}</div><div class="au">${esc(i.author || " ")}${i.pub ? " · " + esc(i.pub) : ""}</div>
       <div class="shelf">${i.shelf === "B" ? "비북스 직영" : esc(i.shelf + " " + i.shelfName)}</div>
+      ${NOCOVER ? `<div class="au" style="white-space:normal;font-size:11px">시트: ${esc(i.title)}</div>` : ""}
       <div class="price">${i.listPrice > i.price ? `<s>${won(i.listPrice)}</s>` : ""}${won(i.price)}</div>
       ${i.stock <= 2 ? `<div class="stock">${i.stock}권 남음</div>` : ""}
       <button class="add ${cart[i.id] ? "in" : ""}" data-add>${cart[i.id] ? "담김 ✓" : "담기"}</button></div>

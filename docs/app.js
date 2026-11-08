@@ -30,7 +30,7 @@ async function load() {
     const [t0, hint] = split(i.title), b = BOOKS[norm(i.title)];
     return { ...i, id: i.shelf + "|" + (i.barcode || norm(i.title)), name: (b && b.title) || t0, author: b ? [...(b.authors || [])].join(", ") : hint,
       pub: b?.publisher || i.publisher, cover: b?.thumbnail || "", book: b || null };
-  }).filter(i => i.stock > 0 && !(C.hideShelves || []).includes(i.shelf) && !(C.hideTitleWords || []).some(w => i.title.includes(w)));
+  }).filter(i => i.stock > 0 && !(C.hideShelves || []).includes(i.shelf) && !(C.hideTitleWords || []).some(w => i.title.includes(w)) && !(C.hideItems || []).includes(i.shelf + "|" + i.title.trim()));
   $("#stats").innerHTML = `<div><b>${L.reduce((a, i) => a + i.stock, 0).toLocaleString()}</b>권 주문 가능</div><div><b>${new Set(L.map(i => i.shelf)).size}</b>개 서가</div><div><b>${L.filter(i => i.cat === "중고").length}</b>종 중고책</div>`;
   const shelves = {}; L.forEach(i => (shelves[i.shelf] ||= { n: i.shelfName, c: 0 }).c++);
   $("#shelf").innerHTML = `<option value="">모든 서가 (${Object.keys(shelves).length})</option>` + Object.entries(shelves)

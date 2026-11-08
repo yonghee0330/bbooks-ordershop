@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-11-08T16:31",
+"generatedAt": "2026-11-08T16:35",
 "source": "live.xlsx",
 "items": [
 {
@@ -8345,18 +8345,6 @@
 {
 "shelf": "B-45",
 "shelfName": "득템서가",
-"cat": "중고",
-"title": "그림책",
-"barcode": "",
-"price": 3000,
-"listPrice": 0,
-"publisher": "",
-"stock": 18,
-"added": "2026-10-04"
-},
-{
-"shelf": "B-45",
-"shelfName": "득템서가",
 "cat": "새책(도매)",
 "title": "바우트원 2 (장우룡)",
 "barcode": "",
@@ -8412,18 +8400,6 @@
 "listPrice": 96000,
 "publisher": "",
 "stock": 1,
-"added": "2026-11-04"
-},
-{
-"shelf": "B-45",
-"shelfName": "득템서가",
-"cat": "중고",
-"title": "미스터 램프",
-"barcode": "",
-"price": 7000,
-"listPrice": 0,
-"publisher": "",
-"stock": 4,
 "added": "2026-11-04"
 },
 {
@@ -8520,18 +8496,6 @@
 "listPrice": 72000,
 "publisher": "",
 "stock": 1,
-"added": "2026-11-04"
-},
-{
-"shelf": "B-45",
-"shelfName": "득템서가",
-"cat": "중고",
-"title": "(중고) 전천당 (권당 5천원)",
-"barcode": "",
-"price": 5000,
-"listPrice": 12000,
-"publisher": "길벗스쿨",
-"stock": 5,
 "added": "2026-11-04"
 },
 {
@@ -12133,18 +12097,6 @@
 "publisher": "다른길",
 "stock": 1,
 "added": "2026-04-16"
-},
-{
-"shelf": "C-95",
-"shelfName": "화요일오후두시",
-"cat": "중고",
-"title": "꼬마소년 바다 키링",
-"barcode": "777777950002",
-"price": 33000,
-"listPrice": 33000,
-"publisher": "",
-"stock": 1,
-"added": "2026-04-06"
 },
 {
 "shelf": "C-95",

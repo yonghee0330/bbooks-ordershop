@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-11-08T16:35",
+"generatedAt": "2026-11-08T19:28",
 "source": "live.xlsx",
 "items": [
 {
@@ -4175,18 +4175,6 @@
 "price": 6000,
 "listPrice": 0,
 "publisher": "푸르르프레스",
-"stock": 1,
-"added": "2026-11-05"
-},
-{
-"shelf": "B",
-"shelfName": "비북스 직영",
-"cat": "새책",
-"title": "맨질맨질하고 딱딱한 삶에 대한",
-"barcode": "",
-"price": 32000,
-"listPrice": 0,
-"publisher": "파킹페이지 프레스",
 "stock": 1,
 "added": "2026-11-05"
 },

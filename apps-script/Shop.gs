@@ -21,7 +21,7 @@ const HEAD = ['주문번호', '접수시각', '상태', '이름', '연락처', '
 const C = { NO: 0, AT: 1, ST: 2, NAME: 3, PHONE: 4, METHOD: 5, ADDR: 6, DEP: 7, MEMO: 8, SHIP: 9, TOTAL: 10, JSON: 11, MAIL: 12, DONE_AT: 13, SALE: 14, MAILED: 15 };
 const FREE_OVER = 30000, SHIP_FEE = 3000;
 const HIDE_TITLE_WORDS = ['균일가', '블라인드북'];   // 제목에 이 단어가 있으면 사이트에 표시하지 않음
-const HIDE_SHELVES = ['S-1', 'S-2'];   // 비활성 서가: 사이트에 표시하지 않음 (점주 탭 상태를 '제외'로 바꿔도 같은 효과)
+const HIDE_SHELVES = ['S-1', 'S-2', 'C-71'];   // C-71 = 성인 인증이 필요한 도서(BL 만화) 서가   // 비활성 서가: 사이트에 표시하지 않음 (점주 탭 상태를 '제외'로 바꿔도 같은 효과)
 
 // ───────── 웹앱 ─────────
 function doGet(e) {

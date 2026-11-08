@@ -5,6 +5,7 @@ window.BB = {
   kakaoProxy: "",   // 새 제목 보충용 카카오책 검색 프록시 (Vercel)
   bank: { name: "카카오뱅크", account: "7942-33-45474", holder: "경규환" },   // 무통장입금 정보 — 운영자가 입력
   hideShelves: ["S-1", "S-2"],   // 비활성 서가: 사이트에 표시하지 않음
+  hideTitleWords: ["균일가", "블라인드북"],   // 제목에 이 단어가 있으면 표시하지 않음(묶음·안내·블라인드 상품)
   shipping: { fee: 3000, freeOver: 30000 },
   pickupPlace: "비북스 · 부천 원미동"
 };

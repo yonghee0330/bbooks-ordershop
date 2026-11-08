@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-11-08T10:30",
+"generatedAt": "2026-11-08T10:32",
 "source": "live.xlsx",
 "items": [
 {
@@ -6509,42 +6509,6 @@
 {
 "shelf": "A-17",
 "shelfName": "책방, 파도 & 또봐 만화방",
-"cat": "중고",
-"title": "3,000원 균일가",
-"barcode": "777777170041",
-"price": 3000,
-"listPrice": 0,
-"publisher": "",
-"stock": 3,
-"added": "2026-07-05"
-},
-{
-"shelf": "A-17",
-"shelfName": "책방, 파도 & 또봐 만화방",
-"cat": "중고",
-"title": "5,000원 균일가",
-"barcode": "777777170042",
-"price": 5000,
-"listPrice": 0,
-"publisher": "",
-"stock": 8,
-"added": "2026-07-05"
-},
-{
-"shelf": "A-17",
-"shelfName": "책방, 파도 & 또봐 만화방",
-"cat": "중고",
-"title": "10,000원 균일가",
-"barcode": "777777170043",
-"price": 10000,
-"listPrice": 0,
-"publisher": "",
-"stock": 4,
-"added": "2026-07-05"
-},
-{
-"shelf": "A-17",
-"shelfName": "책방, 파도 & 또봐 만화방",
 "cat": "새책(도매)",
 "title": "책이라면 팔 만큼 2 (코지마 아오)",
 "barcode": "",
@@ -6961,18 +6925,6 @@
 "publisher": "",
 "stock": 1,
 "added": "2026-03-30"
-},
-{
-"shelf": "B-25",
-"shelfName": "모터사이클",
-"cat": "중고",
-"title": "모터사이클 균일가 도서",
-"barcode": "777777250003",
-"price": 5000,
-"listPrice": 0,
-"publisher": "",
-"stock": 15,
-"added": "2026-05-23"
 },
 {
 "shelf": "B-27",
@@ -7681,54 +7633,6 @@
 "publisher": "문학동네",
 "stock": 1,
 "added": "2026-03-28"
-},
-{
-"shelf": "B-38",
-"shelfName": "무해책방",
-"cat": "중고",
-"title": "블라인드북 1",
-"barcode": "777777170002",
-"price": 15000,
-"listPrice": 15000,
-"publisher": "",
-"stock": 1,
-"added": "2026-04-21"
-},
-{
-"shelf": "B-38",
-"shelfName": "무해책방",
-"cat": "중고",
-"title": "블라인드북 2",
-"barcode": "777777170003",
-"price": 15000,
-"listPrice": 15000,
-"publisher": "",
-"stock": 1,
-"added": "2026-04-24"
-},
-{
-"shelf": "B-38",
-"shelfName": "무해책방",
-"cat": "중고",
-"title": "블라인드북3",
-"barcode": "777777380010",
-"price": 10000,
-"listPrice": 10000,
-"publisher": "",
-"stock": 1,
-"added": "2026-04-24"
-},
-{
-"shelf": "B-38",
-"shelfName": "무해책방",
-"cat": "중고",
-"title": "블라인드북4",
-"barcode": "777777380011",
-"price": 13000,
-"listPrice": 13000,
-"publisher": "",
-"stock": 1,
-"added": "2026-04-24"
 },
 {
 "shelf": "B-38",
@@ -12601,30 +12505,6 @@
 "publisher": "피스빌딩",
 "stock": 1,
 "added": "2026-04-15"
-},
-{
-"shelf": "C-92",
-"shelfName": "세사람",
-"cat": "중고",
-"title": "균일가 1만원 도서",
-"barcode": "777777920009",
-"price": 10000,
-"listPrice": 0,
-"publisher": "",
-"stock": 3,
-"added": "2026-06-20"
-},
-{
-"shelf": "C-92",
-"shelfName": "세사람",
-"cat": "중고",
-"title": "균일가 5천원 도서",
-"barcode": "777777920010",
-"price": 5000,
-"listPrice": 0,
-"publisher": "",
-"stock": 5,
-"added": "2026-06-20"
 },
 {
 "shelf": "C-93",

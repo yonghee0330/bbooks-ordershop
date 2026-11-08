@@ -20,6 +20,7 @@ const HEAD = ['주문번호', '접수시각', '상태', '이름', '연락처', '
               '주문내용(JSON)', '이메일', '완료시각', '판매기록', '안내메일'];
 const C = { NO: 0, AT: 1, ST: 2, NAME: 3, PHONE: 4, METHOD: 5, ADDR: 6, DEP: 7, MEMO: 8, SHIP: 9, TOTAL: 10, JSON: 11, MAIL: 12, DONE_AT: 13, SALE: 14, MAILED: 15 };
 const FREE_OVER = 30000, SHIP_FEE = 3000;
+const HIDE_TITLE_WORDS = ['균일가', '블라인드북'];   // 제목에 이 단어가 있으면 사이트에 표시하지 않음
 const HIDE_SHELVES = ['S-1', 'S-2'];   // 비활성 서가: 사이트에 표시하지 않음 (점주 탭 상태를 '제외'로 바꿔도 같은 효과)
 
 // ───────── 웹앱 ─────────
@@ -83,6 +84,7 @@ function computeBase_() {
     });
     Object.keys(g).forEach(k => {
       const d = g[k]; if (d.cat === '굿즈' || d.cat === '기타' || d.cat === '대관' || !(d.price > 0)) return;
+      if (HIDE_TITLE_WORDS.some(w => d.title.indexOf(w) >= 0)) return;
       const stock = d.cur || 0;
       if (stock > 0) items.push({ shelf: sid, shelfName: sid === 'B' ? '비북스 직영' : o.name, cat: d.cat || '', title: d.title, barcode: d.barcode, price: d.price, listPrice: d.list, publisher: d.pub || '', stock: stock, added: d.added });
     });

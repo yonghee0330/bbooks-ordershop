@@ -25,6 +25,7 @@ for r in wb["점주"].iter_rows(min_row=2, values_only=True):
 owners["B"] = {"tab": "비북스 직영", "name": "비북스 직영", "status": "운영"}
 
 HIDE = {"S-1", "S-2"}   # 비활성 서가
+HIDE_WORDS = ("균일가", "블라인드북")   # 제목에 있으면 제외
 items = []
 for ws in wb:
     t = ws.title
@@ -65,6 +66,7 @@ for ws in wb:
                       "barcode": d["barcode"], "price": int(d["price"]), "listPrice": int(d["list"]),
                       "publisher": d["pub"] or "", "stock": int(cur),
                       "added": d["date"].strftime("%Y-%m-%d") if d["date"] else ""})
+items = [i for i in items if not any(w in i["title"] for w in HIDE_WORDS)]
 items = [i for i in items if i["cat"] != "굿즈" and i["cat"] not in ("기타", "대관") and i["price"] > 0]
 out.write_text(json.dumps({"generatedAt": datetime.datetime.now().isoformat(timespec="minutes"), "source": pathlib.Path(src).name, "items": items}, ensure_ascii=False, indent=0))
 c = collections.Counter((i["shelf"] == "B", i["cat"]) for i in items)

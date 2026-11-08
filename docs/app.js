@@ -60,7 +60,7 @@ function render() {
   $("#grid").innerHTML = vis.length ? vis.map(i => `
   <article class="card" data-id="${esc(i.id)}">
     <div class="cov" data-open>${coverHtml(i)}<span class="tag ${i.cat === "중고" ? "used" : ""}">${catOf(i)}</span></div>
-    <div class="info"><div class="ttl" data-open>${esc(i.name)}</div><div class="au">${esc(i.author || " ")}${i.pub ? " · " + esc(i.pub) : ""}</div>
+    <div class="info"><div class="ttl" data-open>${esc(i.name)}</div><div class="au">${esc(i.author || " ")}${i.pub && i.pub !== i.author ? " · " + esc(i.pub) : ""}</div>
       <div class="shelf">${i.shelf === "B" ? "비북스 직영" : esc(i.shelf + " " + i.shelfName)}</div>
       ${NOCOVER ? `<div class="au" style="white-space:normal;font-size:11px">시트: ${esc(i.title)}</div>` : ""}
       <div class="price">${i.listPrice > i.price ? `<s>${won(i.listPrice)}</s>` : ""}${won(i.price)}</div>
@@ -122,7 +122,7 @@ function shipFee(sub, method) { return method === "pickup" || !sub || sub >= C.s
 function detail(id) {
   const i = byId(id), b = i.book, others = L.filter(x => x !== i && ((b?.isbn && x.book?.isbn === b.isbn) || (norm(i.name).length >= 2 && norm(x.name) === norm(i.name))));
   $("#modal").innerHTML = `<div class="sheet"><button class="x" data-close>×</button><div class="det">${i.cover ? `<img src="${esc(i.cover)}" alt="" referrerpolicy="no-referrer">` : `<div class="cov"><div class="ph">${esc(i.name)}</div></div>`}
-    <div><h2>${esc(i.name)}</h2><div class="au" style="white-space:normal">${esc(i.author)}${i.pub ? " · " + esc(i.pub) : ""}${b?.pubdate ? " · " + b.pubdate.slice(0, 4) : ""}</div>
+    <div><h2>${esc(i.name)}</h2><div class="au" style="white-space:normal">${esc(i.author)}${i.pub && i.pub !== i.author ? " · " + esc(i.pub) : ""}${b?.pubdate ? " · " + b.pubdate.slice(0, 4) : ""}</div>
     <div class="shelf">${i.shelf === "B" ? "비북스 직영" : esc(i.shelf + " " + i.shelfName)} · ${i.cat === "중고" ? "중고" : "새책"} · 재고 ${i.stock}권</div>
     <div class="price" style="font-size:18px;margin:8px 0">${i.listPrice > i.price ? `<s>${won(i.listPrice)}</s>` : ""}${won(i.price)}</div>
     <button class="add ${cart[i.id] ? "in" : ""}" data-add data-id="${esc(i.id)}" style="width:100%">${cart[i.id] ? "담김 ✓" : "장바구니에 담기"}</button></div></div>
